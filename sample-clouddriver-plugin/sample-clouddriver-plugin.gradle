@@ -1,0 +1,45 @@
+apply plugin: "io.spinnaker.plugin.service-extension"
+apply plugin: 'java'
+apply plugin: "groovy"
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+sourceSets.main.java.srcDirs = ["src/main/java"]
+
+spinnakerPlugin {
+    serviceName = "sample-clouddriver-plugin"
+    pluginClass = "com.sample.ClouddriverPlugin"
+    requires = "sample-clouddriver-plugin>=0.0.0"
+}
+
+dependencies {
+    implementation "com.google.guava:guava:30.0-jre"
+    compileOnly "org.codehaus.groovy:groovy-all:+"
+    compileOnly (group: 'org.springframework', name: 'spring-context', version: '5.2.9.RELEASE')
+    compileOnly (group: 'io.spinnaker.kork', name: 'kork-plugins-spring-api', version: "${korkVersion}")
+    compileOnly (group: 'org.springframework', name: 'spring-web', version: '5.2.9.RELEASE')
+    compileOnly "io.spinnaker.clouddriver:clouddriver-api:${clouddriverVersion}"
+    compileOnly "io.spinnaker.clouddriver:cats-core:${clouddriverVersion}"
+    compileOnly "io.spinnaker.clouddriver:clouddriver-security:${clouddriverVersion}"
+    compileOnly "io.spinnaker.clouddriver:clouddriver-eureka:${clouddriverVersion}"
+    compileOnly "io.spinnaker.clouddriver:clouddriver-core:${clouddriverVersion}"
+    compileOnly 'org.projectlombok:lombok:+'
+    annotationProcessor "org.projectlombok:lombok:+"
+    annotationProcessor("org.pf4j:pf4j:$pf4jVersion")
+
+    testImplementation "io.spinnaker.clouddriver:clouddriver-api:${clouddriverVersion}"
+    testImplementation "io.spinnaker.clouddriver:cats-core:${clouddriverVersion}"
+    testImplementation "io.spinnaker.clouddriver:clouddriver-security:${clouddriverVersion}"
+    testImplementation "io.spinnaker.clouddriver:clouddriver-eureka:${clouddriverVersion}"
+    testImplementation "io.spinnaker.clouddriver:clouddriver-core:${clouddriverVersion}"
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.2.5.RELEASE'
+    testImplementation group: 'org.springframework', name: 'spring-web', version: '5.2.9.RELEASE'
+
+
+}
