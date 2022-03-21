@@ -17,7 +17,7 @@ public class ClouddriverPlugin extends PrivilegedSpringPlugin{
     public void registerBeanDefinitions(BeanDefinitionRegistry registry) {
         BeanDefinition sampleDef = beanDefinitionFor(SampleDefinition.class);
         try {
-            log.debug("Registering bean: {}", sampleDef.getBeanClassName());
+            log.info("Registering bean: {}", sampleDef.getBeanClassName());
             registry.registerBeanDefinition("sampleDef", sampleDef);
         } catch (BeanDefinitionStoreException e) {
             log.error("Could not register bean {}", sampleDef.getBeanClassName());
