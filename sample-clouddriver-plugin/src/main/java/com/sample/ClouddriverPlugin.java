@@ -6,6 +6,10 @@ import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 public class ClouddriverPlugin extends PrivilegedSpringPlugin{
 
@@ -15,12 +19,25 @@ public class ClouddriverPlugin extends PrivilegedSpringPlugin{
 
     @Override
     public void registerBeanDefinitions(BeanDefinitionRegistry registry) {
-        BeanDefinition sampleDef = beanDefinitionFor(SampleDefinition.class);
+        BeanDefinition googleCredentialsRepository = primaryBeanDefinitionFor(GoogleCredentialsRepository.class);
         try {
-            log.info("Registering bean: {}", sampleDef.getBeanClassName());
-            registry.registerBeanDefinition("sampleDef", sampleDef);
+            log.debug("Registering bean: {}", googleCredentialsRepository.getBeanClassName());
+            registry.registerBeanDefinition("googleCredentialsRepository", googleCredentialsRepository);
         } catch (BeanDefinitionStoreException e) {
-            log.error("Could not register bean {}", sampleDef.getBeanClassName());
+            log.error("Could not register bean {}", googleCredentialsRepository.getBeanClassName());
+        }
+        List<Class> classes = new ArrayList<>(Arrays.asList(
+                GoogleCredentialsDefinitionSource.class,
+                GcsSource.class,
+                GoogleUtils.class));
+        for (Class classToAdd : classes) {
+            BeanDefinition beanDefinition = beanDefinitionFor(classToAdd);
+            try {
+                log.debug("Registering bean: {}", beanDefinition.getBeanClassName());
+                registerBean(beanDefinition, registry);
+            } catch (ClassNotFoundException e) {
+                log.error("Could not register bean {}", beanDefinition.getBeanClassName());
+            }
         }
 
     }
