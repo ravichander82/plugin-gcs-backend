@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.netflix.spinnaker.clouddriver.google.config.GoogleConfigurationProperties;
 import com.netflix.spinnaker.credentials.definition.CredentialsDefinitionSource;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
@@ -13,11 +13,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
+
 public class GoogleCredentialsDefinitionSource implements CredentialsDefinitionSource<GoogleConfigurationProperties.ManagedAccount> {
 
-    private static final GcsSource gcsSource = new GcsSource() ;
+    private static final GcsSource gcsSource = new GcsSource();
 
+    @Autowired
+    private GCSConfig config;
 
     @Override
     public List<GoogleConfigurationProperties.ManagedAccount> getCredentialsDefinitions() {
@@ -25,7 +27,7 @@ public class GoogleCredentialsDefinitionSource implements CredentialsDefinitionS
         List<GoogleConfigurationProperties.ManagedAccount> googleCredentialsDefinitions =
                 new ArrayList<>();
 
-        InputStream bucket = gcsSource.downloadRemoteFile("waze_gcs", "sample.yml");
+        InputStream bucket = gcsSource.downloadRemoteFile(config.getGcsBucketName(), config.getFileName());
 
         Yaml yaml = new Yaml();
         Map<String, Object> data = yaml.load(bucket);

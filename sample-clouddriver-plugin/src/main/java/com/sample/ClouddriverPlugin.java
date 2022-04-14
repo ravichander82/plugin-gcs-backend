@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class ClouddriverPlugin extends PrivilegedSpringPlugin{
+public class ClouddriverPlugin extends PrivilegedSpringPlugin {
 
     public ClouddriverPlugin(PluginWrapper wrapper) {
         super(wrapper);
@@ -25,11 +25,13 @@ public class ClouddriverPlugin extends PrivilegedSpringPlugin{
             registry.registerBeanDefinition("googleCredentialsRepository", googleCredentialsRepository);
         } catch (BeanDefinitionStoreException e) {
             log.error("Could not register bean {}", googleCredentialsRepository.getBeanClassName());
+
         }
         List<Class> classes = new ArrayList<>(Arrays.asList(
                 GoogleCredentialsDefinitionSource.class,
                 GcsSource.class,
-                GoogleUtils.class));
+                GoogleUtils.class,
+                GCSConfig.class));
         for (Class classToAdd : classes) {
             BeanDefinition beanDefinition = beanDefinitionFor(classToAdd);
             try {
